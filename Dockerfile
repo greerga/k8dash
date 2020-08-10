@@ -1,5 +1,6 @@
 # Stage 1 - the build react app
-FROM node:12.4.0-alpine as build-deps
+FROM node:lts-alpine as build-deps
+RUN apk add --no-cache python2 build-base
 WORKDIR /usr/src/app
 COPY client/package.json client/package-lock.json ./
 RUN npm i
@@ -8,9 +9,9 @@ COPY client/ ./
 RUN npm run build
 
 # Stage 2 - the production environment
-FROM node:12.4.0-alpine
+FROM node:lts-alpine
 
-RUN apk add --no-cache tini
+RUN apk add --no-cache tini python2 build-base
 ENV NODE_ENV production
 WORKDIR /usr/src/app
 RUN chown -R node:node /usr/src/app/
